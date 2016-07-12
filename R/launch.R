@@ -11,6 +11,7 @@ run <- function(dataIn) {
       dataIn[[3]], keep.null = T)
   ))
   lockBinding(".e", environment())
+  attach(input[[1]])
 
   # run source, capture output
   captured <- tryCatch(capture.output({
