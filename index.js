@@ -25,14 +25,18 @@ R.prototype.data = function() {
 };
 
 R.prototype.call = function(_opts, _callback) {
+  var stdout = new Buffer([]);
   var callback = _callback || _opts;
   var opts = _.isFunction(_opts) ? {} : _opts;
   this.options.env.input = JSON.stringify([this.d, this.path, opts]);
   var child = child_process.spawn("Rscript", this.args, this.options);
   child.stderr.on("data", callback);
   child.stdout.on("data", function(d) {
-    callback(null, JSON.parse(d));
+    stdout = Buffer.concat([stdout, d]);
   });
+  child.stdout.on("close", function() {
+    callback(null, JSON.parse(stdout));
+  })
 };
 
 R.prototype.callSync = function(_opts) {
