@@ -37,7 +37,13 @@ R.prototype.call = function(_opts, _callback) {
     stdout = Buffer.concat([stdout, d]);
   });
   child.stdout.on("close", function() {
-    callback(null, JSON.parse(stdout));
+    let data
+    try {
+      data = JSON.parse(stdout)
+    } catch (err) {
+      callback(err)
+    }
+    callback(null, data)
   })
 };
 
